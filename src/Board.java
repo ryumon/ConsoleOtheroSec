@@ -4,7 +4,7 @@ public class Board {
 
 	public Board() {
 		for(int i=0; i<8; i++) {
-			for(int j=0; j<i; j++) {
+			for(int j=0; j<8; j++) {
 				masu[i][j] = 0;
 			}
 		}
@@ -18,7 +18,7 @@ public class Board {
 		for(int i=0; i<8; i++) {
 			System.out.print(i+1);
 			for(int j=0; j<8; j++) {
-				switch(masu[j][i]) {
+				switch(masu[i][j]) {
 				case 0:	System.out.print(" +"); break;
 				case 1:	System.out.print(" œ"); break;
 				case 2:	System.out.print(" ›"); break;

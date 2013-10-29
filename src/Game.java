@@ -18,18 +18,19 @@ public class Game {
 		while(true){
 			r:if(!blackTurn) {
 				System.out.println("入力してください。(CPU)＞白");
+				sleep(1000);
 				while(true) {
-					
+
 					for(int i=0; i<8; i++) {
-						for(int j=0; j<i; j++) {
+						for(int j=0; j<8; j++) {
 							inputCPU = cpu.masuC[i][j];
 							x = inputCPU / 10;
 							y = inputCPU % 10;
-							
+
 							if(!flipAll(x, y, board, blackTurn)) {
 								continue;
 							}else {
-									System.out.println((x+1)+""+(y+1));
+								System.out.println((y+1)+""+(x+1));
 								board.show();
 								//手番の交代
 								blackTurn = !blackTurn;
@@ -37,19 +38,20 @@ public class Game {
 							}
 						}
 					}
-					
+
 				}
-				
-			}else {
-				System.out.println("入力してください。＞黒");
-			
+
+			}
+		if(blackTurn){
+			System.out.println("入力してください。＞黒");
+
 			int input = scan.nextInt();
 			if(input==999) {
 				System.out.println("終了します。");
 				break;
 			}
-			x = input / 10 - 1;
-			y = input % 10 - 1;
+			y = input / 10 - 1;
+			x = input % 10 - 1;
 
 			if(!flipAll(x, y, board, blackTurn)) {
 				System.out.println("コマが置けません。やり直してください。＞");
@@ -59,13 +61,16 @@ public class Game {
 			board.show();
 			//手番の交代
 			blackTurn = !blackTurn;
-			}
+		}
 		}
 	}
 
 	private boolean flipAll(int x, int y, Board board, boolean player1) {
 		//コマを裏返したかどうか
 		boolean isOK = false;
+
+		if(board.masu[x][y] != 0) { return isOK;}
+
 
 		if(checkLine(-1, 0, x, y, board, player1)) {
 			flip(-1, 0,x, y, board, player1); isOK = true;}
@@ -88,7 +93,7 @@ public class Game {
 
 	}
 	/**
-	 * 
+	 *
 	 * @param directionX
 	 * @param directionY
 	 * @param x
@@ -104,12 +109,14 @@ public class Game {
 
 		if(blackTurn) { myColor = 1; opponentColor = 2; }else { myColor = 2; opponentColor = 1; }
 
-		int count = 0;//確認したコマの数
-		if(checkNext(directionX, directionY, x, y, board, blackTurn)==opponentColor) {
-			int i = 1;
 
-			//ここ要確認
-			try {
+		//ここ要確認
+		try {
+
+			int count = 0;//確認したコマの数
+			if(checkNext(directionX, directionY, x, y, board, blackTurn)==opponentColor) {
+				int i = 1;
+				foundMyColor = false;
 				while(true) {
 					if(checkNext(directionX + directionX*i, directionY + directionY*i, x, y, board, blackTurn)==opponentColor) {
 						count++;
@@ -125,23 +132,21 @@ public class Game {
 					//					count++;
 					//					i++;
 				}
-			} catch (ArrayIndexOutOfBoundsException e) {
-				return false;
+
+			}else { foundMyColor = false;}} catch (ArrayIndexOutOfBoundsException e) {
+				foundMyColor = false;
 			}
-
-
-		}else { foundMyColor = false;}
-		return foundMyColor;
+			return foundMyColor;
 	}
 	/**
-	 * 
+	 *
 	 * @param directionX
 	 * @param directionY
 	 * @param x
 	 * @param y
 	 * @param board
 	 * @param blackTurn
-	 * @return 相手の色のコマがあったら２、自分の色のコマがあったら１、何も無いならなら０を返す
+	 * @return 相手の色のコマがあったらopponentColor、自分の色のコマがあったらmyColor、何も無いならなら０を返す
 	 */
 	private int checkNext(int directionX, int directionY, int x, int y, Board board, boolean blackTurn) {
 		int myColor;
@@ -163,7 +168,7 @@ public class Game {
 
 
 	/**
-	 * 
+	 *
 	 * @param directionX
 	 * @param directionY
 	 * @param x
@@ -187,6 +192,17 @@ public class Game {
 			}
 		}
 		board.masu[x][y] = myColor;
+	}
+
+
+
+	private void sleep(int millsec) {
+		try {
+			Thread.sleep(millsec);
+		} catch (InterruptedException e) {
+			//
+			e.printStackTrace();
+		}
 	}
 }
 
